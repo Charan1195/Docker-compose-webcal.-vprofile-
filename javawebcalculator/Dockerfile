@@ -1,19 +1,23 @@
-FROM ubuntu:22.04 AS builder
+FROM ubuntu:22.04 AS charan
+
 WORKDIR /app
+
+# Install JDK, Maven, Git
 RUN apt update && \
     apt install -y openjdk-17-jdk maven git
-RUN git clone https://github.com/anji103/vprofile-project /app
+
+# Clone and build Java Web Calculator
+RUN git clone https://github.com/prudhvisurya996/JavaWebCalculator.git /app
 WORKDIR /app
 RUN mvn clean package -DskipTests
 
-# Use Tomcat to run the WAR
+# Stage 2: Run with Tomcat
 FROM tomcat:9.0-jdk17
 
-# Clean default webapps
-RUN rm -rf /usr/local/tomcat/webapps/*
+WORKDIR /usr/local/tomcat
 
-# Copy WAR and rename it to ROOT.war
-COPY --from=builder /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
+RUN rm -rf webapps/*
+COPY --from=charan /app/target/*.war webapps/ROOT.war
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
