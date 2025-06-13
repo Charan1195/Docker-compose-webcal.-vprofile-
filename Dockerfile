@@ -1,19 +1,13 @@
-# Stage 1: Build
-FROM ubuntu AS builder
+FROM ubuntu:22.04 AS builder
 WORKDIR /app
 
-RUN apt update -y && \
-    apt install -y git maven openjdk-17-jdk
+RUN apt update && \
+    apt install -y openjdk-17-jdk maven git
 
-# Clone the repository and build the application
-RUN git clone https://github.com/srikanthv247/JavaWebCalculator.git
-WORKDIR /app/JavaWebCalculator
-RUN mvn package
+RUN git clone https://github.com/prudhvisurya996/JavaWebCalculator.git /app
+WORKDIR /app
+RUN mvn clean package
 
-# Stage 2: Deploy
-FROM tomcat:9-jdk17
-COPY --from=builder /app/JavaWebCalculator/target/*.war /usr/local/tomcat/webapps/
-RUN chmod 755 /usr/local/tomcat/webapps/*.war
-
+FROM tomcat:9.0-jdk17
+COPY --from=builder /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 EXPOSE 8080
-CMD ["catalina.sh", "run"]
