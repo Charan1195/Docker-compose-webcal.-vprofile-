@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  javawebcalculator:
+    build:
+      context: ./javawebcalculator
+    ports:
+      - "8080:8080"
+    container_name: javawebcalculator
+
+  vprofile:
+    build:
+      context: ./vprofile
+    ports:
+      - "8081:8080"
+    container_name: vprofile
