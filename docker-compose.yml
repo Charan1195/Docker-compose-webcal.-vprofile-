@@ -4,6 +4,7 @@ services:
   javawebcalculator:
     build:
       context: ./javawebcalculator
+    image: javawebcalculator:latest    # ✅ Added image name
     ports:
       - "8080:8080"
     container_name: javawebcalculator
@@ -11,6 +12,7 @@ services:
   vprofile:
     build:
       context: ./vprofile
+    image: vprofile:latest             # ✅ Added image name
     ports:
       - "8081:8080"
     container_name: vprofile
